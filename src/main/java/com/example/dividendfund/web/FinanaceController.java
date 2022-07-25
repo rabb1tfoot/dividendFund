@@ -1,33 +1,21 @@
 package com.example.dividendfund.web;
 
+import com.example.dividendfund.service.FinanceService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class Controller {
+@RequestMapping("/finance")
+@AllArgsConstructor
+public class FinanaceController {
 
-    @GetMapping("/finance/devidend/{companyName}")
+    private final FinanceService financeService;
+
+    @GetMapping("/devidend/{companyName}")
     public ResponseEntity<?> searchFinanace(@PathVariable String companyName){
-        return null;
+        var result = financeService.getDividendByCompanyName(companyName);
+        return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/company/autocomplete")
-    public ResponseEntity<?> autocomplete(@RequestParam String keyWord){
-        return null;
-    }
-
-    @GetMapping("/company")
-    public ResponseEntity<?> searchCompany(){
-        return null;
-    }
-
-    @PostMapping("/compnay")
-    public ResponseEntity<?> addCompany(){
-        return null;
-    }
-
-    @DeleteMapping("/company")
-    public ResponseEntity<?> deleteCompany(){
-        return null;
-    }
 }
