@@ -47,6 +47,7 @@ public class ScaperScheduler {
                         boolean exists = dividendRepository.existsByCompanyIdAndDate(e.getCompanyId(), e.getDate());
                         if(!exists){
                             dividendRepository.save(e);
+                            log.info("insert new dividend -> " + e.toString());
                         }
                     });
 

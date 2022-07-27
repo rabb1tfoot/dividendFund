@@ -1,5 +1,6 @@
 package com.example.dividendfund.service;
 
+import com.example.dividendfund.exception.impl.NoCompanyException;
 import com.example.dividendfund.model.Company;
 import com.example.dividendfund.model.ScrapedResult;
 import com.example.dividendfund.persist.CompanyRepository;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +27,7 @@ public class CompanyService {
     private final Scraper scraper;
     private final CompanyRepository companyRepository;
     private final DividendRepository dividendRepository;
-
+    @Transactional
     public Company save(String ticker){
 
         boolean exists = companyRepository.existsByTicker(ticker);
@@ -74,5 +76,16 @@ public class CompanyService {
 
     public void deleteAutocompleteKeyword(String keyword){
         trie.remove(keyword);
+    }
+
+    public String deleteCompany(String ticker) {
+        var company = companyRepository.findByTicker(ticker)
+                .orElseThrow(() -> new NoCompanyException());
+
+        dividendRepository.deleteAllByCompanyId(company.getId());
+        companyRepository.delete(company);
+
+        deleteAutocompleteKeyword(company.getName());
+        return company.getName();
     }
 }

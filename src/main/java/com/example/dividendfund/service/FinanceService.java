@@ -1,5 +1,6 @@
 package com.example.dividendfund.service;
 
+import com.example.dividendfund.exception.impl.NoCompanyException;
 import com.example.dividendfund.model.Company;
 import com.example.dividendfund.model.Dividend;
 import com.example.dividendfund.model.ScrapedResult;
@@ -31,7 +32,7 @@ public class FinanceService {
         log.info("search company ->" + companyName);
         //회사정보 조회
         CompanyEntity companyEntity = companyRepository.findByName(companyName)
-                .orElseThrow(() -> new RuntimeException("invalid companyname"));
+                .orElseThrow(() -> new NoCompanyException());
         //회사id로 배당금 조회
         List<DividendEntity> dividendEntityList =dividendRepository.findAllByCompanyId(companyEntity.getId());
 
